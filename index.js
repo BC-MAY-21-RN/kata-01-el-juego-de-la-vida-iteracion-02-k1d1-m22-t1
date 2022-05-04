@@ -35,21 +35,6 @@ class Celula {
   getLimits() {
     return this.limites;
   }
-
-  // Metodo de la clase que evalua el valor de su estado segun la cantidad de vecinos que posea
-  escuchar_estado(cantVecinos) {
-    if (cantVecinos < 2 && this.estado == 1) {
-      this.estado = 0;
-    } else if (cantVecinos > 3 && this.estado == 1) {
-      this.estado = 0;
-    } else if ((cantVecinos === 3 || cantVecinos === 2) && this.estado == 1) {
-      this.estado = 1;
-    } else if (cantVecinos == 3 && this.estado == 0) {
-      this.estado = 1;
-    } else {
-      console.log("El parametro obtenido no pertenece a ningun caso ");
-    }
-  }
 }
 
 // Clase tablero 
@@ -70,7 +55,7 @@ class Tablero {
   // Metodo de clase que genera un estado de la celula aleatoriamente (0 => muerto , 1 => vivo)
   randomState() {
     let numeroRandom = Math.random();
-    if (numeroRandom > 0.8) {
+    if (numeroRandom > 0.98) {
       return 1;
     } else {
       return 0;
@@ -79,17 +64,20 @@ class Tablero {
 
   // Metodo de la clase que muestra el tablero por consola
   getTablero() {
+    console.clear()
     this.estructura.forEach((fila) =>
       console.log(
         fila.map((columna) => (columna.getState() ? "*" : ".")).join("")
       )
     );
+    this.recorrerTablero();
   }
 
   recorrerTablero() {
     for (let i = 0; i < this.columnas; i++) {
       for (let j = 0; j < this.filas; j++) {
         let vivas = this.contador(i, j);
+        this.cambiosEstado(vivas, i, j, this.estructura[j][i].state);
       }
     }
   }
@@ -111,9 +99,23 @@ class Tablero {
        }    
       }
     }
-    console.log(cnt);
     return cnt;
   }
+
+    // Metodo de la clase que evalua el valor de su estado segun la cantidad de vecinos que posea
+    cambiosEstado(cantVecinos, posX, posY, estado) {
+      if(estado == 1){
+        if(cantVecinos===3 || cantVecinos === 2){
+          this.estructura[posX][posY].estado = 1;
+        }else{
+          this.estructura[posX][posY].estado = 0;
+        }
+      }else{
+        if (cantVecinos === 3){
+          this.estructura[posX][posY].estado = 1;
+        }
+      }
+    }
 }
 
 const askFila = new Input({
@@ -126,17 +128,16 @@ const askColumnas = new Input({
   message: "Ingrese las columnas: ",
 });
 
-const run = async () => {
+const inicializaTablero = async () => {
   var fila = await askFila.run();
   fila = parseInt(fila);
   var columna = await askColumnas.run();
   columna = parseInt(columna);
   const tabla = new Tablero(fila, columna);
-  tabla.getTablero();
-  tabla.recorrerTablero();
+  setInterval(() => {tabla.getTablero()},1000);
 };
 
-run();
+inicializaTablero();
 
 
 /*
