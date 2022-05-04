@@ -1,6 +1,7 @@
 // Clase Celula
 // Atributos: Estado - Posicion en X - Posicion en Y - Limites - Cantidad de vecinos
 // Metodos: Mostrar estado - Modificar estado - Mostrar posicion XY - Mostrar limites - Escuchar estado
+const { Input, AutoComplete} = require('enquirer');
 
 class Celula {
     constructor(estado, xPosition, yPosition, limites, cantVecinos) {
@@ -76,7 +77,25 @@ class Celula {
       );
     }
   }
-  
-  const tabla = new Tablero(4, 4);
+
+const askFila = new Input({
+    name: 'fila',
+    message: 'Ingrese la fila: '
+});
+
+const askColumnas = new Input({
+  name: 'columna',
+  message: 'Ingrese las columnas: '
+});
+
+const run = async () => {
+  var fila  = await askFila.run()
+  fila = parseInt(fila)
+  var columna  = await askColumnas.run()
+  columna = parseInt(columna)
+  const tabla = new Tablero(fila, columna);
   tabla.getTablero();
+}
   
+  
+run();
