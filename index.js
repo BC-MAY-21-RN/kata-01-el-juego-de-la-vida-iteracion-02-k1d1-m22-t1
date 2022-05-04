@@ -17,6 +17,10 @@ class Celula {
     return this.estado; //Devueleve el estado: 1- Si esta vivo 0-Si esta muerto
   }
 
+  get state() {
+    return this.getState();
+  }
+
   // Metodo de la clase que modifica el estado de la celula
   setState(newState) {
     this.estado = newState;
@@ -92,20 +96,20 @@ class Tablero {
 
   contador(x, y) {
     //Movimientos
-    let moveX = new Array(0, 0, 1, -1, -1, -1, 1, 1);
-    let moveY = new Array(1, -1, 0, 0, 1, -1, -1, 1);
+    const moveX = new Array(0, 0, 1, -1, -1, -1, 1, 1);
+    const moveY = new Array(1, -1, 0, 0, 1, -1, -1, 1);
     //Contador de celulas vivas
     let cnt = 0;
     //Ciclo para realizar los movimientos
-    for (let cell = 0; cell < 8; cell++) {
-      let mox = x + moveX[cell];
-      let moy = y + moveY[cell];
-      //const celulaState = this.estructura[mox][moy].Celula.estado
-      console.log(this.estructura[x][y])
-      //console.log(celulaState.estado)
-      //if (celulaState['estado'] == 1) {
-       // cnt += 1;
-      //}
+    for (let i = 0; i < 8; i++) {
+      const mox = x + moveX[i];
+      const moy = y + moveY[i];
+      if(!(mox<0 || moy<0 || mox>this.filas-1 || moy>this.columnas-1)){
+        const celulaState = this.estructura[mox][moy];
+        if (celulaState.state == 1) {
+          cnt += 1;
+       }    
+      }
     }
     console.log(cnt);
     return cnt;
@@ -147,6 +151,4 @@ Salida por terminal
 *.*
 ...
 .*.
- 
- 
 */
